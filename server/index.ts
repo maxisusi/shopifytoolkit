@@ -2,15 +2,15 @@ import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 
-import { AdminRoute, VandorRoute } from "./routes";
+import { StoreRoute, ProductRoute } from "./routes";
 import { MONGO_URI } from "./config";
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/admin", AdminRoute);
-app.use("/vandor", VandorRoute);
+app.use("/store", StoreRoute);
+app.use("/product", ProductRoute);
 
 mongoose
   .connect(MONGO_URI, {

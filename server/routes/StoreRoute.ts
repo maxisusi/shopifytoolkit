@@ -9,14 +9,14 @@ import {
 
 const router = express.Router();
 
-router.post("/store", CreateStore);
-router.get("/stores", GetStores);
-router.get("/store/:id", GetStoresByID);
-router.patch("/store/update/:id", UpdateStore);
-router.delete("/store/delete/:id", DeleteStore);
+router.post("/create", CreateStore);
+router.get("/get/all", GetStores);
+router.get("/get/:id", GetStoresByID);
+router.patch("/update/:id", UpdateStore);
+router.delete("/delete/:id", DeleteStore);
 
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.json({ message: "Hello from Admin route" });
 });
 
-export { router as AdminRoute };
+export { router as StoreRoute };

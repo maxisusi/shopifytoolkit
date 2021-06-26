@@ -5,14 +5,7 @@ interface StoreDoc extends Document {
   ownerName: string;
   niche: [string];
   storeLink: string;
-  products: [
-    {
-      name: string;
-      sellingPrice: string;
-      cogs: string;
-      shippingPrice: string;
-    }
-  ];
+  // products: any;
 }
 
 const StoreSchema = new Schema(
@@ -21,14 +14,12 @@ const StoreSchema = new Schema(
     ownerName: { type: String, require: false },
     niche: { type: [String], require: true },
     storeLink: { type: String, require: false },
-    products: [
-      {
-        name: { type: String, require: true },
-        sellingPrice: { type: String, require: true },
-        cogs: { type: String, require: true },
-        shippingPrice: { type: String, require: true },
-      },
-    ],
+    // products: [
+    //   {
+    //     type: mongoose.SchemaTypes.ObjectId,
+    //     ref: "product",
+    //   },
+    // ],
   },
   {
     toJSON: {

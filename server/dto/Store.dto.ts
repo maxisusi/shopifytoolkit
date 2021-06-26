@@ -3,12 +3,4 @@ export interface CreateStoreInput {
   ownerName: string;
   niche: [string];
   storeLink: string;
-  products: [
-    {
-      name: string;
-      sellingPrice: string;
-      cogs: string;
-      shippingPrice: string;
-    }
-  ];
 }

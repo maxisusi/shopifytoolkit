@@ -15,9 +15,7 @@ export const CreateStore = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, niche, ownerName, storeLink, products } = <CreateStoreInput>(
-    req.body
-  );
+  const { name, niche, ownerName, storeLink } = <CreateStoreInput>req.body;
   const existingStore = await FindStore("", name);
   if (existingStore) {
     return res.json({ message: "You are creating the same store twice" });
@@ -29,7 +27,6 @@ export const CreateStore = async (
     niche,
     ownerName,
     storeLink,
-    products,
   });
 
   return res.json(createStore);
@@ -65,9 +62,7 @@ export const UpdateStore = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, niche, ownerName, products, storeLink } = <CreateStoreInput>(
-    req.body
-  );
+  const { name, niche, ownerName, storeLink } = <CreateStoreInput>req.body;
 
   const storeId = req.params.id;
   const store = await FindStore(storeId);
@@ -76,13 +71,14 @@ export const UpdateStore = async (
     store.name = name;
     store.niche = niche;
     store.ownerName = ownerName;
-    store.products = products;
     store.storeLink = storeLink;
 
     const savedResult = await store.save();
-  }
 
-  return res.json(store);
+    return res.json(store);
+  } else {
+    return res.json({ message: "No corresponding store" });
+  }
 };
 
 export const DeleteStore = async (

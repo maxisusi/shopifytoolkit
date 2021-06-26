@@ -1,1 +1,2 @@
-export * from "./AdminController";
+export * from "./StoreController";
+export * from "./ProductController";
