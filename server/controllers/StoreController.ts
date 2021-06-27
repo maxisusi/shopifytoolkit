@@ -1,14 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateStoreInput } from "../dto";
 import { Store } from "../models";
-
-export const FindStore = async (id: string | undefined, name?: string) => {
-  if (name) {
-    return await Store.findOne({ name });
-  } else {
-    return await Store.findById(id);
-  }
-};
+import { FindStore } from "../utility";
 
 export const CreateStore = async (
   req: Request,
@@ -27,6 +20,7 @@ export const CreateStore = async (
     niche,
     ownerName,
     storeLink,
+    products: [],
   });
 
   return res.json(createStore);
