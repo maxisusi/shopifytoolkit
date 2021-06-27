@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateProductInput } from "../dto/Product.dto";
 import { Store, Product } from "../models";
-import { FindStore } from "../utility";
+import { FindProduct, FindStore } from "../utility";
 
 export const AddProduct = async (
   req: Request,
@@ -57,5 +57,32 @@ export const GetProducts = async (
     res.json(products);
   } else {
     res.json({ message: "No products available" });
+  }
+};
+
+export const UpdateProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { name, cogs, sellingPrice, shippingFees } = <CreateProductInput>(
+    req.body
+  );
+
+  const productId = req.params.id;
+
+  const product = await FindProduct(productId);
+
+  if (product) {
+    product.name = name;
+    product.cogs = cogs;
+    product.sellingPrice = sellingPrice;
+    product.shippingFees = shippingFees;
+
+    const savedResult = await product.save();
+
+    return res.json(product);
+  } else {
+    res.json({ message: "No available store with this ID" });
   }
 };
