@@ -6,6 +6,8 @@ import { StoreRoute, ProductRoute } from "./routes";
 import { MONGO_URI } from "./config";
 const app = express();
 
+mongoose.set("useFindAndModify", false);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

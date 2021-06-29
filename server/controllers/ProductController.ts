@@ -86,3 +86,26 @@ export const UpdateProduct = async (
     res.json({ message: "No available store with this ID" });
   }
 };
+
+export const DeleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const productId = req.params.id;
+  const product = await FindProduct(productId);
+
+  if (product) {
+    //Delete product
+    const deleteProduct = await Product.findByIdAndRemove(productId);
+    //Delete product from store
+    const storeUpdated = await Store.updateOne(
+      { products: productId },
+      {
+        $pull: { products: productId },
+      }
+    );
+
+    res.json(storeUpdated);
+  }
+};
