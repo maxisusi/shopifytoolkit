@@ -13,6 +13,6 @@ router.post("/create/:id", AddProduct);
 router.get("/:id", GetProductsByStore);
 router.get("/get/all", GetProducts);
 router.patch("/update/:id", UpdateProduct);
-router.delete("/del/:id", DeleteProduct);
+router.delete("/delete/:id", DeleteProduct);
 
 export { router as ProductRoute };
