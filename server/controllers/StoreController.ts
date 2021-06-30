@@ -62,9 +62,13 @@ export const UpdateStore = async (
   const store = await FindStore(storeId);
 
   if (store) {
+    store.name = name;
+    store.niche = niche;
+    store.ownerName = ownerName;
+    store.storeLink = storeLink;
     const savedResult = await store.save();
 
-    return res.json(store);
+    return res.json(savedResult);
   } else {
     return res.json({ message: "No corresponding store" });
   }
