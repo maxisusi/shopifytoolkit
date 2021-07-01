@@ -2,16 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import { CreateStoreInput } from "../dto";
 import { Store } from "../models";
 import { FindStore } from "../utility";
+import { DuplicatedError } from "./errors/DuplicatedError";
+import { NotFoundError } from "./errors/NotFoundError";
 
-export const CreateStore = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const CreateStore = async (req: Request, res: Response) => {
   const { name, niche, ownerName, storeLink } = <CreateStoreInput>req.body;
   const existingStore = await FindStore("", name);
   if (existingStore) {
-    return res.json({ message: "You are creating the same store twice" });
+    throw new DuplicatedError();
   }
 
   //Create the store in database
@@ -26,36 +24,24 @@ export const CreateStore = async (
   return res.json(createStore);
 };
 
-export const GetStores = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const GetStores = async (req: Request, res: Response) => {
   const stores = await Store.find();
   if (stores) {
     return res.json(stores);
   }
-  return res.json({ message: "No store has been created" });
+  throw new NotFoundError();
 };
 
-export const GetStoresByID = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const GetStoresByID = async (req: Request, res: Response) => {
   const storeId = req.params.id;
   const store = await FindStore(storeId);
   if (store) {
     return res.json(store);
   }
-  return res.json({ message: "There is no store with the corresponding id" });
+  throw new NotFoundError();
 };
 
-export const UpdateStore = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const UpdateStore = async (req: Request, res: Response) => {
   const { name, niche, ownerName, storeLink } = <CreateStoreInput>req.body;
 
   const storeId = req.params.id;
@@ -69,23 +55,18 @@ export const UpdateStore = async (
     const savedResult = await store.save();
 
     return res.json(savedResult);
-  } else {
-    return res.json({ message: "No corresponding store" });
   }
+  throw new NotFoundError();
 };
 
-export const DeleteStore = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const DeleteStore = async (req: Request, res: Response) => {
   const storeId = req.params.id;
   const store = await FindStore(storeId);
 
   if (store) {
     const deleteStore = await Store.findByIdAndRemove(storeId);
     return res.json(deleteStore);
-  } else {
-    return res.json({ message: "No corresponding store with the provided ID" });
   }
+
+  throw new NotFoundError();
 };

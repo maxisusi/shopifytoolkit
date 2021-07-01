@@ -3,6 +3,8 @@ import { CreateProductInput } from "../dto/Product.dto";
 import { Store, Product } from "../models";
 import { FindProduct, FindStore } from "../utility";
 
+import { NotFoundError } from "./errors/NotFoundError";
+
 export const AddProduct = async (
   req: Request,
   res: Response,
@@ -23,48 +25,30 @@ export const AddProduct = async (
     });
 
     store.products.push(createProduct);
-
     const result = await store.save();
-
-    return res.json(result);
-  } else {
-    return res.json({ message: "No store corresponding to this ID" });
   }
+  throw new NotFoundError();
 };
 
-export const GetProductsByStore = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const GetProductsByStore = async (req: Request, res: Response) => {
   const store = await FindStore(req.params.id);
 
   if (store) {
     return res.json(store.products);
-  } else {
-    return res.json({ message: "No store corresponding to this ID" });
   }
+  throw new NotFoundError();
 };
 
-export const GetProducts = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const GetProducts = async (req: Request, res: Response) => {
   const products = await Product.find();
 
   if (products) {
     res.json(products);
-  } else {
-    res.json({ message: "No products available" });
   }
+  throw new NotFoundError();
 };
 
-export const UpdateProduct = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const UpdateProduct = async (req: Request, res: Response) => {
   const { name, cogs, sellingPrice, shippingFees } = <CreateProductInput>(
     req.body
   );
@@ -80,23 +64,17 @@ export const UpdateProduct = async (
     product.shippingFees = shippingFees;
 
     const savedResult = await product.save();
-
     return res.json(product);
-  } else {
-    res.json({ message: "No available store with this ID" });
   }
+  throw new NotFoundError();
 };
 
-export const DeleteProduct = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const DeleteProduct = async (req: Request, res: Response) => {
   const productId = req.params.id;
   const product = await FindProduct(productId);
 
   if (product) {
-    //Delete product
+    //Delete product from product doc
     const deleteProduct = await Product.findByIdAndRemove(productId);
     //Delete product from store
     const storeUpdated = await Store.updateOne(
@@ -108,4 +86,5 @@ export const DeleteProduct = async (
 
     res.json(storeUpdated);
   }
+  throw new NotFoundError();
 };

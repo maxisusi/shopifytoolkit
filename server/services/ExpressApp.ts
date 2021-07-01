@@ -1,7 +1,6 @@
 import express, { Application } from "express";
-import bodyParser from "body-parser";
-
 import { StoreRoute, ProductRoute } from "../routes";
+import { errorHandler } from "../middlewares/error-handler";
 
 export default async (app: Application) => {
   app.use(express.json());
@@ -9,6 +8,7 @@ export default async (app: Application) => {
 
   app.use("/store", StoreRoute);
   app.use("/product", ProductRoute);
+  app.use(errorHandler);
 
   return app;
 };
