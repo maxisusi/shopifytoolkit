@@ -21,13 +21,13 @@ export const CreateStore = async (req: Request, res: Response) => {
     products: [],
   });
 
-  return res.json(createStore);
+  return res.status(201).send("Store successfully created");
 };
 
 export const GetStores = async (req: Request, res: Response) => {
   const stores = await Store.find();
   if (stores) {
-    return res.json(stores);
+    return res.status(200).send(stores);
   }
   throw new NotFoundError();
 };
@@ -36,7 +36,7 @@ export const GetStoresByID = async (req: Request, res: Response) => {
   const storeId = req.params.id;
   const store = await FindStore(storeId);
   if (store) {
-    return res.json(store);
+    return res.status(302).send(store);
   }
   throw new NotFoundError();
 };
@@ -54,7 +54,7 @@ export const UpdateStore = async (req: Request, res: Response) => {
     store.storeLink = storeLink;
     const savedResult = await store.save();
 
-    return res.json(savedResult);
+    return res.status(200).send(savedResult);
   }
   throw new NotFoundError();
 };
@@ -65,7 +65,7 @@ export const DeleteStore = async (req: Request, res: Response) => {
 
   if (store) {
     const deleteStore = await Store.findByIdAndRemove(storeId);
-    return res.json(deleteStore);
+    return res.status(200).send("Store successfully deleted");
   }
 
   throw new NotFoundError();

@@ -26,15 +26,18 @@ export const AddProduct = async (
 
     store.products.push(createProduct);
     const result = await store.save();
+
+    return res.status(201).send("The product has been successfully created");
+  } else {
+    throw new NotFoundError();
   }
-  throw new NotFoundError();
 };
 
 export const GetProductsByStore = async (req: Request, res: Response) => {
   const store = await FindStore(req.params.id);
 
   if (store) {
-    return res.json(store.products);
+    return res.status(200).send(store.products);
   }
   throw new NotFoundError();
 };
@@ -43,7 +46,7 @@ export const GetProducts = async (req: Request, res: Response) => {
   const products = await Product.find();
 
   if (products) {
-    res.json(products);
+    res.status(200).send(products);
   }
   throw new NotFoundError();
 };
@@ -64,7 +67,7 @@ export const UpdateProduct = async (req: Request, res: Response) => {
     product.shippingFees = shippingFees;
 
     const savedResult = await product.save();
-    return res.json(product);
+    return res.status(200).send(product);
   }
   throw new NotFoundError();
 };
@@ -84,7 +87,7 @@ export const DeleteProduct = async (req: Request, res: Response) => {
       }
     );
 
-    res.json(storeUpdated);
+    res.status(200).send("Product successfully deleted");
   }
   throw new NotFoundError();
 };
